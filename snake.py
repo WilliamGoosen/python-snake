@@ -9,6 +9,13 @@ class Snake():
             (start_x - segment_size, start_y),
             (start_x - segment_size * 2, start_y)])
         self.direction = "right"
+        self.should_grow: bool = False
+
+    def head(self) -> tuple:
+        return self.body[0]
+    
+    def grow(self)-> None:
+        self.should_grow = True
         
     def change_direction(self, new_direction: str):
         opposites = {"up": "down", "down": "up", "left": "right", "right": "left"}
@@ -42,7 +49,11 @@ class Snake():
         
         
         self.body.appendleft(new_head)
-        self.body.pop()
+        if self.should_grow:
+            self.should_grow = False
+        else:
+            self.body.pop()
+            
         return False
 
     def _check_wall_collision(self, width: int, height: int, head_position: tuple) -> bool:
