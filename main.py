@@ -7,6 +7,7 @@ SCREEN_HEIGHT = 640
 start_x = SCREEN_WIDTH // 2
 start_y = SCREEN_HEIGHT //2
 snake_speed: int = 10
+snake_collided: bool = False
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pg.display.set_caption("Snake!!!")
 clock = pg.time.Clock()
@@ -38,8 +39,8 @@ while running:
                 
     # --- Updates ---
     move_timer += dt
-    if move_timer > 1 / snake_speed:
-        snake.move(SCREEN_WIDTH, SCREEN_HEIGHT)
+    if not snake_collided and move_timer > 1 / snake_speed:
+        snake_collided = snake.move(SCREEN_WIDTH, SCREEN_HEIGHT)
         move_timer = 0
     
     # --- Draw to the Screen

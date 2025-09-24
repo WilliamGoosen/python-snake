@@ -21,56 +21,34 @@ class Snake():
         y: int = head[1]
         
         if self.direction == "left":
-            # if x <= 0:
-            #     new_head = (0, y)
-            # else:
-                new_head = (x - 20, y)
-                # self.body.appendleft(new_head)
-                # self.body.pop()
+            new_head = (x - 20, y)
 
         elif self.direction == "right":
-            # if x >= width - 20:
-            #     new_head = (width - 20, y)
-            # else:
-                new_head = (x + 20, y)
-                # self.body.appendleft(new_head)
-                # self.body.pop()
+            new_head = (x + 20, y)
 
         elif self.direction == "up":
-            # if y <= 0:
-            #     new_head = (x, 0)
-            # else:
-                new_head = (x, y - 20)
-                # self.body.appendleft(new_head)
-                # self.body.pop()
+            new_head = (x, y - 20)
 
         elif self.direction == "down":
-            # if y >= height - 20:
-            #     new_head = (x, height - 20)
-            # else:
-                new_head = (x, y + 20)
-                # self.body.appendleft(new_head)
-                # self.body.pop()
+            new_head = (x, y + 20)
                 
-        # if self._check_collision(new_head):
-        #     return False
-        if x <= 0 or x >= width - 20 or y <= 0 or y >= height - 20:
+        if self._check_wall_collision(width, height, new_head):        
             print("You scrashed into a wall!!!")
-            return False
+            return True
 
         if self._check_self_collision(new_head):
             print("You crashed into yourself!!!")
-            return False
+            return True
         
         
         self.body.appendleft(new_head)
         self.body.pop()
-        return True
+        return False
 
-    # def _check_collision(self, position: tuple) -> bool:
-    #     x: int= position[0]
-    #     y: int = position[1]
-    #     return x <= 0 or x >= width - 20
+    def _check_wall_collision(self, width: int, height: int, head_position: tuple) -> bool:
+        x: int= head_position[0]
+        y: int = head_position[1]
+        return x < 0 or x > width - 20 or y < 0 or y > height - 20
         
     def _check_self_collision(self, position: tuple) -> bool:
         return position in self.body
