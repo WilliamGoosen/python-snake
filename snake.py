@@ -17,10 +17,25 @@ class Snake():
     def grow(self)-> None:
         self.should_grow = True
         
-    def change_direction(self, new_direction: str):
-        opposites = {"up": "down", "down": "up", "left": "right", "right": "left"}
-        if new_direction != opposites.get(self.direction):
-            self.direction = new_direction
+    def change_direction(self, new_direction: str) -> bool:
+        head_pos = self.body[0]
+        neck_pos = self.body[1]
+
+        if new_direction == "up":
+            if head_pos[1] > neck_pos[1]:  # Prevent reversal from down
+                return False
+        elif new_direction == "down":
+            if head_pos[1] < neck_pos[1]:  # Prevent reversal from up
+                return False
+        elif new_direction == "left":
+            if head_pos[0] > neck_pos[0]:  # Prevent reversal from right
+                return False
+        elif new_direction == "right":
+            if head_pos[0] < neck_pos[0]:  # Prevent reversal from left
+                return False
+
+        self.direction = new_direction
+        return True
         
     def move(self, width: int, height: int, top_bar: int) -> bool:
         head = self.body[0]
