@@ -1,19 +1,35 @@
 import pygame as pg
 from snake import Snake
+from food import Pellet
 
 pg.init()
 SCREEN_WIDTH = 720
 SCREEN_HEIGHT = 640
+SEGMENT_SIZE = 20
+SCREEN_COLOUR = "black"
+
 start_x = SCREEN_WIDTH // 2
 start_y = SCREEN_HEIGHT //2
+
+# Generate all grid coordinates (20px segments)
+# Advanced one-liner: [(x, y) for x in range(0, SCREEN_WIDTH, 20) 
+#                           for y in range(0, SCREEN_HEIGHT, 20)]
+GRID_COORDS: list = []
+for x in range(0, SCREEN_WIDTH, SEGMENT_SIZE):
+    for y in range(0, SCREEN_HEIGHT, SEGMENT_SIZE):
+        GRID_COORDS.append((x,y))
+
 snake_speed: int = 10
 snake_collided: bool = False
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pg.display.set_caption("Snake!!!")
 clock = pg.time.Clock()
 snake = Snake(start_x, start_y)
+pellet: Pellet = Pellet()
+pellet.spawn(GRID_COORDS, snake.body)
 
 move_timer = 0
+
 running = True
 while running:
     
@@ -36,17 +52,27 @@ while running:
                 snake.change_direction("up")
             if event.key == pg.K_DOWN:
                 snake.change_direction("down")
-                
+    
+    if snake.head() == pellet.food_position:
+        snake.grow()
+        pellet.spawn(GRID_COORDS, snake.body)
+
+
     # --- Updates ---
     move_timer += dt
     if not snake_collided and move_timer > 1 / snake_speed:
         snake_collided = snake.move(SCREEN_WIDTH, SCREEN_HEIGHT)
         move_timer = 0
+
+    
     
     # --- Draw to the Screen
-    screen.fill("white")
+    screen.fill(SCREEN_COLOUR)
     
     snake.draw(screen)
+    pellet.draw(screen)
+
+
     
     
     pg.display.flip()
