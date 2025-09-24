@@ -22,24 +22,24 @@ class Snake():
         if new_direction != opposites.get(self.direction):
             self.direction = new_direction
         
-    def move(self, width: int, height: int) -> bool:
+    def move(self, width: int, height: int, top_bar: int) -> bool:
         head = self.body[0]
         x: int= head[0]
         y: int = head[1]
         
         if self.direction == "left":
-            new_head = (x - 20, y)
+            new_head = (x - self.segment_size, y)
 
         elif self.direction == "right":
-            new_head = (x + 20, y)
+            new_head = (x + self.segment_size, y)
 
         elif self.direction == "up":
-            new_head = (x, y - 20)
+            new_head = (x, y - self.segment_size)
 
         elif self.direction == "down":
-            new_head = (x, y + 20)
+            new_head = (x, y + self.segment_size)
                 
-        if self._check_wall_collision(width, height, new_head):        
+        if self._check_wall_collision(width, height, top_bar, new_head):        
             print("You scrashed into a wall!!!")
             return True
 
@@ -56,10 +56,10 @@ class Snake():
             
         return False
 
-    def _check_wall_collision(self, width: int, height: int, head_position: tuple) -> bool:
+    def _check_wall_collision(self, width: int, height: int, top_bar: int, head_position: tuple) -> bool:
         x: int= head_position[0]
         y: int = head_position[1]
-        return x < 0 or x > width - 20 or y < 0 or y > height - 20
+        return x < 0 or x > width - self.segment_size or y < 0 + top_bar or y > height - self.segment_size
         
     def _check_self_collision(self, position: tuple) -> bool:
         return position in self.body
