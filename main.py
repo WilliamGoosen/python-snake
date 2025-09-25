@@ -1,25 +1,17 @@
 import pygame as pg
+from pathlib import Path
 from snake import Snake
 from food import Pellet
-from utilities import draw_text, load_or_create_file
-
-def new_high_score_check(file: str, score: int, high_score: int):
-    
-    if score > high_score:
-        high_score = score
-        with open(file, "w") as f:
-            f.write(str(score))
-        return True
-    else:
-        return False   
+from utilities import draw_text, load_or_create_file, new_high_score_check
 
 def draw_ui(surface, score: int, high_score: int, top_bar_rect: tuple, bar_colour: tuple, border_colour: tuple, text_colour: tuple, font_name: str) -> None:
     x, y, width, height = top_bar_rect
     pg.Surface.fill(surface, bar_colour, top_bar_rect)
-    bottom_y = y + height
-    pg.draw.line(surface, border_colour, (x, bottom_y), (x + width, bottom_y), 2)
+    line_width = 2
+    bottom_y = y + height - line_width
+    pg.draw.line(surface, border_colour, (x, bottom_y), (x + width, bottom_y), line_width)
     draw_text(surface, f"SCORE: {score}", 22, x + width * 0.01, height * 0.5, font_name, text_colour, align_x="left", align_y="center")
-    draw_text(surface, f"HIGH SCORE: {high_score}", 22, width * 0.99, height * 0.5, font_name, text_colour, align_x="right", align_y="center")
+    draw_text(surface, f"HIGH SCORE: {score if score > high_score else high_score}", 22, width * 0.99, height * 0.5, font_name, text_colour, align_x="right", align_y="center")
 
 pg.init()
 SCREEN_WIDTH = 720
@@ -28,7 +20,7 @@ TOP_BAR_HEIGHT = 40
 SEGMENT_SIZE = 20
 FONT_NAME = pg.font.match_font("arial")
 
-HS_FILE: str = 'highscore.txt'
+HS_FILE: Path = Path('highscore.txt')
 
 # Colours
 CHARCOAL = (45, 55, 72)
@@ -57,7 +49,7 @@ snake = Snake(start_x, start_y)
 pellet: Pellet = Pellet()
 pellet.spawn(GRID_COORDS, snake.body)
 
-high_score = int(load_or_create_file(HS_FILE, 0))
+high_score: int = int(load_or_create_file(HS_FILE, '0'))
 score: int = 0
 move_timer = 0
 
