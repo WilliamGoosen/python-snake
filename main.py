@@ -1,7 +1,17 @@
 import pygame as pg
 from snake import Snake
 from food import Pellet
-from utilities import draw_text
+from utilities import draw_text, load_or_create_file
+
+def new_high_score_check(file: str, score: int, high_score: int):
+    
+    if score > high_score:
+        high_score = score
+        with open(file, "w") as f:
+            f.write(str(score))
+        return True
+    else:
+        return False   
 
 def draw_ui(surface, score: int, high_score: int, top_bar_rect: tuple, bar_colour: tuple, border_colour: tuple, text_colour: tuple, font_name: str) -> None:
     x, y, width, height = top_bar_rect
@@ -17,6 +27,8 @@ SCREEN_HEIGHT = 640
 TOP_BAR_HEIGHT = 40
 SEGMENT_SIZE = 20
 FONT_NAME = pg.font.match_font("arial")
+
+HS_FILE: str = 'highscore.txt'
 
 # Colours
 CHARCOAL = (45, 55, 72)
@@ -45,6 +57,7 @@ snake = Snake(start_x, start_y)
 pellet: Pellet = Pellet()
 pellet.spawn(GRID_COORDS, snake.body)
 
+high_score = int(load_or_create_file(HS_FILE, 0))
 score: int = 0
 move_timer = 0
 
@@ -82,12 +95,14 @@ while running:
     if not snake_collided and move_timer > 1 / snake_speed:
         snake_collided = snake.move(SCREEN_WIDTH, SCREEN_HEIGHT, TOP_BAR_HEIGHT)
         move_timer = 0
+    else:
+        new_high_score_check(HS_FILE, score, high_score)
 
     
     
     # --- Draw to the Screen
     screen.fill(SCREEN_COLOUR)
-    draw_ui(screen, score, score, top_bar_rect, CHARCOAL, BORDER_GRAY, TEXT_WHITE, FONT_NAME )
+    draw_ui(screen, score, high_score, top_bar_rect, CHARCOAL, BORDER_GRAY, TEXT_WHITE, FONT_NAME )
     snake.draw(screen)
     pellet.draw(screen)
 

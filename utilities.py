@@ -1,4 +1,20 @@
 import pygame as pg
+from os import path
+
+def load_or_create_file(file_path: str, default_value: int):
+    # Check if the file exists first
+    if path.exists(file_path):
+        # If it exists, open it and try to read the score
+        try:
+            with open(file_path, 'r') as f:
+                return f.read().strip()
+        except ValueError:
+            # If file is corrupt or disappears, fall back to default
+            pass
+    # If file doesn't exist or is invalid, create it with the default
+    with open(file_path, 'w') as f:
+        f.write(str(default_value))
+    return default_value  # Return the default value
 
 
 _text_cache = {}
