@@ -59,3 +59,30 @@ def draw_text(surf: pg.Surface, text: str, size: int, x: int, y: int, font_name:
         text_rect.bottom = y
     
     surf.blit(text_surface, text_rect)
+
+
+def draw_confirm_popup(surface: pg.Surface, screen_width: int, screen_height: int, font_name: str) -> None:
+    scale_factor = 1  
+    WHITE = (255, 255, 255)
+    RED = (255, 0, 0)  
+    CONFIRM_OVERLAY = (0, 0, 0, 192)
+
+    confirm_overlay = pg.Surface((screen_width, screen_height), pg.SRCALPHA)
+    confirm_overlay.fill(CONFIRM_OVERLAY)
+        
+    popup_width = screen_width * 0.4 * scale_factor
+    popup_height = screen_height * 0.2 * scale_factor
+    popup_bg = pg.Surface((popup_width, popup_height), pg.SRCALPHA)
+    popup_bg.fill(RED)
+
+    surface.blit(confirm_overlay, (0, 0))
+    popup_rect = popup_bg.get_rect(center = (screen_width // 2, screen_height // 2))
+    surface.blit(popup_bg, popup_rect.topleft)
+
+    draw_text(surface, "Restart Game?", round(24 * scale_factor), round(screen_width * 0.5), round(screen_height * 0.45), font_name, WHITE, align_x="center", align_y="center")
+
+    # draw_icon(surface, game.graphics_manager.icons["y_icon"], screen_width * 0.4, screen_height * 0.497)
+    draw_text(surface, "[Y]es", round(24 * scale_factor), round(screen_width * 0.4), round(screen_height * 0.497), font_name, WHITE)
+
+    # draw_icon(surface, game.graphics_manager.icons["n_icon"], screen_width * 0.55, screen_height * 0.497)
+    draw_text(surface, "[N]o", round(24 * scale_factor), round(screen_width * 0.55), round(screen_height * 0.497),font_name, WHITE)
