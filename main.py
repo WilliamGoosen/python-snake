@@ -2,7 +2,7 @@ import pygame as pg
 from pathlib import Path
 from snake import Snake
 from food import Pellet
-from utilities import draw_text, load_or_create_file, new_high_score_check
+from utilities import draw_text, load_or_create_file, new_high_score_check, draw_confirm_popup
 
 def draw_ui(surface, score: int, high_score: int, top_bar_rect: tuple, bar_colour: tuple, border_colour: tuple, text_colour: tuple, font_name: str) -> None:
     x, y, width, height = top_bar_rect
@@ -52,6 +52,7 @@ pellet.spawn(GRID_COORDS, snake.body)
 high_score: int = int(load_or_create_file(HS_FILE, '0'))
 score: int = 0
 move_timer = 0
+confirm_popup = False
 
 running = True
 while running:
@@ -65,16 +66,28 @@ while running:
             running = False
         
         if event.type == pg.KEYDOWN:
-            if event.key == pg.K_ESCAPE:
-                running = False
-            if event.key == pg.K_LEFT:
-                snake.change_direction("left")
-            if event.key == pg.K_RIGHT:
-                snake.change_direction("right")
-            if event.key == pg.K_UP:
-                snake.change_direction("up")
-            if event.key == pg.K_DOWN:
-                snake.change_direction("down")
+            if confirm_popup:
+
+                if event.key == pg.K_ESCAPE or event.key == pg.K_n:
+                    running = False
+                elif event.key == pg.K_y:
+                    confirm_popup = False
+                    snake_collided = False
+                    snake = Snake(start_x, start_y)
+                    score = 0
+                    pellet.spawn(GRID_COORDS, snake.body)
+            
+            else:
+                if event.key == pg.K_ESCAPE:
+                    running = False
+                if event.key == pg.K_LEFT:
+                    snake.change_direction("left")
+                if event.key == pg.K_RIGHT:
+                    snake.change_direction("right")
+                if event.key == pg.K_UP:
+                    snake.change_direction("up")
+                if event.key == pg.K_DOWN:
+                    snake.change_direction("down")
     
     if snake.head() == pellet.food_position:
         score += 1
@@ -87,7 +100,8 @@ while running:
     if not snake_collided and move_timer > 1 / snake_speed:
         snake_collided = snake.move(SCREEN_WIDTH, SCREEN_HEIGHT, TOP_BAR_HEIGHT)
         move_timer = 0
-    else:
+    elif snake_collided:
+        confirm_popup = True
         new_high_score_check(HS_FILE, score, high_score)
 
     
@@ -97,6 +111,9 @@ while running:
     draw_ui(screen, score, high_score, top_bar_rect, CHARCOAL, BORDER_GRAY, TEXT_WHITE, FONT_NAME )
     snake.draw(screen)
     pellet.draw(screen)
+    if confirm_popup:
+        draw_confirm_popup(screen, SCREEN_WIDTH, SCREEN_HEIGHT, FONT_NAME)
+        # confirm_popup = False
 
 
     
