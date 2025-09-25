@@ -1,20 +1,24 @@
 import pygame as pg
-from os import path
+from pathlib import Path
 
-def load_or_create_file(file_path: str, default_value: int):
+def new_high_score_check(file: Path, score: int, high_score: int) -> bool:
+    if score > high_score:
+        file.write_text(str(score))
+        return True
+    return False
+
+def load_or_create_file(file_path: Path, default_content: str) -> str:
     # Check if the file exists first
-    if path.exists(file_path):
+    if file_path.exists():
         # If it exists, open it and try to read the score
         try:
-            with open(file_path, 'r') as f:
-                return f.read().strip()
-        except ValueError:
-            # If file is corrupt or disappears, fall back to default
-            pass
+            return file_path.read_text().strip()
+        except (ValueError, OSError):            
+            pass # File exists but is corrupt/unreadable
+
     # If file doesn't exist or is invalid, create it with the default
-    with open(file_path, 'w') as f:
-        f.write(str(default_value))
-    return default_value  # Return the default value
+    file_path.write_text(default_content)
+    return default_content
 
 
 _text_cache = {}
