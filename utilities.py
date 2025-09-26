@@ -24,7 +24,7 @@ def load_or_create_file(file_path: Path, default_content: str) -> str:
 _text_cache = {}
 _font_cache = {}
 
-def draw_text(surf: pg.Surface, text: str, size: int, x: int, y: int, font_name: str, colour: tuple = (0, 0, 0), align_x: str = "left", align_y: str = "top"):
+def draw_text(surf: pg.Surface, text: str, size: int, x: int, y: int, font_name: str, colour: tuple = (255, 255, 255), align_x: str = "left", align_y: str = "top"):
     # --- 1. CACHE THE FONT OBJECT ---
     # Create a key for the font (name + size)
     font_key = (font_name, size)
