@@ -1,6 +1,7 @@
 import pygame as pg
 from states.base_state import BaseState
 from utilities import draw_text
+from settings import TITLE_SCREEN_BG
 from typing import TYPE_CHECKING
 
 # Use the TYPE_CHECKING guard to import for type hints only
@@ -33,8 +34,8 @@ class TitleState(BaseState):
                 self.next_state = "PLAY"
 
     
-    def draw(self, surface: pg.Surface, bg_colour: tuple) -> None:
-        surface.fill(bg_colour)
+    def draw(self, surface: pg.Surface) -> None:
+        surface.fill(TITLE_SCREEN_BG)
         self.draw_title_menu(surface)
 
     def draw_title_menu(self, surface):
