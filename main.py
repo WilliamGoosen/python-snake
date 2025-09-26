@@ -2,6 +2,7 @@ import pygame as pg
 from pathlib import Path
 from settings import SCREEN_HEIGHT, SCREEN_WIDTH, FONT_NAME, HS_FILE, SEGMENT_SIZE, TOP_BAR_HEIGHT, BLACK
 from game_data import Game
+from graphics_manager import GraphicsManager
 from snake import Snake
 from food import Pellet
 from states import BaseState, TitleState, PlayState, GameOverState
@@ -25,6 +26,7 @@ pg.display.set_caption("Snake!!!")
 clock = pg.time.Clock()
 
 game = Game()
+game.graphics_manager = GraphicsManager()
 game.high_score = int(load_or_create_file(hs_file, '0'))
 game.score = 0
 current_state: BaseState = TitleState(game, font_name)
@@ -50,7 +52,7 @@ while running:
             continue
 
     if current_state.next_state == "PLAY":
-        snake: Snake = Snake()
+        snake: Snake = Snake(game)
         pellet: Pellet = Pellet()
         pellet.spawn(GRID_COORDS, snake.body)
         game.score = 0
