@@ -1,10 +1,11 @@
 import pygame as pg
 from pathlib import Path
 from settings import SCREEN_HEIGHT, SCREEN_WIDTH, FONT_NAME, HS_FILE, SEGMENT_SIZE, TOP_BAR_HEIGHT, BLACK
+from game_data import Game
 from snake import Snake
 from food import Pellet
-from states import BaseState, TitleState, PlayState
-from utilities import load_or_create_file, draw_confirm_popup
+from states import BaseState, TitleState, PlayState, GameOverState
+from utilities import load_or_create_file
 
 pg.init()
 
@@ -22,14 +23,11 @@ for x in range(0, SCREEN_WIDTH, SEGMENT_SIZE):
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pg.display.set_caption("Snake!!!")
 clock = pg.time.Clock()
-snake: Snake = Snake()
-pellet: Pellet = Pellet()
-pellet.spawn(GRID_COORDS, snake.body)
 
-high_score: int = int(load_or_create_file(hs_file, '0'))
-score: int = 0
-confirm_popup = False
-current_state: BaseState = TitleState(high_score, SCREEN_WIDTH, SCREEN_HEIGHT, font_name)
+game = Game()
+game.high_score = int(load_or_create_file(hs_file, '0'))
+game.score = 0
+current_state: BaseState = TitleState(game, font_name)
 
 running = True
 while running:
@@ -52,26 +50,22 @@ while running:
             continue
 
     if current_state.next_state == "PLAY":
-        current_state = PlayState(snake, pellet, GRID_COORDS, score, high_score, font_name, hs_file)
+        snake: Snake = Snake()
+        pellet: Pellet = Pellet()
+        pellet.spawn(GRID_COORDS, snake.body)
+        game.score = 0
+        current_state = PlayState(snake, pellet, GRID_COORDS, game, font_name, hs_file)
+    elif current_state.next_state == "GAME_OVER":
+            current_state = GameOverState(game)
+    elif current_state.next_state == "TITLE":
+            current_state = TitleState(game, font_name)
 
 
-# --- Updates ---
-
-
-    
-    
+   
     # --- Draw to the Screen
     screen.fill(BLACK)
-
-    
-    
-    if confirm_popup:
-        draw_confirm_popup(screen, SCREEN_WIDTH, SCREEN_HEIGHT, font_name)
-        # confirm_popup = False
     
     current_state.draw(screen)
 
-    
-    
     pg.display.flip()
 pg.quit()

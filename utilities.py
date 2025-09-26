@@ -24,7 +24,7 @@ def load_or_create_file(file_path: Path, default_content: str) -> str:
 _text_cache = {}
 _font_cache = {}
 
-def draw_text(surf: pg.Surface, text: str, size: int, x: int, y: int, font_name: str, colour: tuple = (255, 255, 255), align_x: str = "left", align_y: str = "top"):
+def draw_text(surf: pg.Surface, text: str, size: int, x: int, y: int, font_name: str, colour: tuple = (255, 255, 255), align_x: str = "center", align_y: str = "center"):
     # --- 1. CACHE THE FONT OBJECT ---
     # Create a key for the font (name + size)
     font_key = (font_name, size)
@@ -79,7 +79,7 @@ def draw_confirm_popup(surface: pg.Surface, screen_width: int, screen_height: in
     popup_rect = popup_bg.get_rect(center = (screen_width // 2, screen_height // 2))
     surface.blit(popup_bg, popup_rect.topleft)
 
-    draw_text(surface, "Restart Game?", round(24 * scale_factor), round(screen_width * 0.5), round(screen_height * 0.45), font_name, WHITE, align_x="center", align_y="center")
+    draw_text(surface, "Are you sure?", round(24 * scale_factor), round(screen_width * 0.5), round(screen_height * 0.45), font_name, WHITE, align_x="center", align_y="center")
 
     # draw_icon(surface, game.graphics_manager.icons["y_icon"], screen_width * 0.4, screen_height * 0.497)
     draw_text(surface, "[Y]es", round(24 * scale_factor), round(screen_width * 0.4), round(screen_height * 0.497), font_name, WHITE)

@@ -1,7 +1,7 @@
 import pygame as pg
 from states.base_state import BaseState
 from utilities import draw_text, new_high_score_check
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT, TOP_BAR_HEIGHT, CHARCOAL, BORDER_GRAY, TEXT_WHITE, HS_FILE
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT, TOP_BAR_HEIGHT, CHARCOAL, BORDER_GRAY, TEXT_WHITE
 from typing import TYPE_CHECKING
 
 # Use the TYPE_CHECKING guard to import for type hints only
@@ -9,15 +9,15 @@ if TYPE_CHECKING:
     from pathlib import Path
     from snake import Snake
     from food import Pellet
+    from game_data import Game
 
 class PlayState(BaseState):
-    def __init__(self, snake: 'Snake', pellet: 'Pellet', grid_coords: list, score: int, high_score: int, font_name: str, hs_file: 'Path'):
+    def __init__(self, snake: 'Snake', pellet: 'Pellet', grid_coords: list, game: 'Game', font_name: str, hs_file: 'Path'):
         super().__init__()
         self.snake = snake
         self.pellet = pellet
+        self.game = game
         self.grid_coords = grid_coords
-        self.score = score
-        self.high_score = high_score
         self.screen_width = SCREEN_WIDTH
         self.screen_height = SCREEN_HEIGHT
         self.top_bar_height = TOP_BAR_HEIGHT
@@ -46,10 +46,12 @@ class PlayState(BaseState):
 
         if self.snake.snake_collided:
             # confirm_popup = True
-            new_high_score_check(self.hs_file, self.score, self.high_score)
+            self.next_state = "GAME_OVER"
+            if new_high_score_check(self.hs_file, self.game.score, self.game.high_score):
+                self.game.high_score = self.game.score
 
         if self.snake.head() == self.pellet.food_position:
-            self.score += 1
+            self.game.score += 1
             self.snake.grow()
             self.pellet.spawn(self.grid_coords, self.snake.body)
 
@@ -67,5 +69,5 @@ class PlayState(BaseState):
         line_width = 2
         bottom_y = y + height - line_width
         pg.draw.line(surface, border_colour, (x, bottom_y), (x + width, bottom_y), line_width)
-        draw_text(surface, f"SCORE: {self.score}", 22, x + width * 0.01, height * 0.5, font_name, text_colour, align_x="left", align_y="center")
-        draw_text(surface, f"HIGH SCORE: {self.score if self.score > self.high_score else self.high_score}", 22, width * 0.99, height * 0.5, font_name, text_colour, align_x="right", align_y="center")
+        draw_text(surface, f"SCORE: {self.game.score}", 22, x + width * 0.01, height * 0.5, font_name, text_colour, align_x="left")
+        draw_text(surface, f"HIGH SCORE: {self.game.score if self.game.score > self.game.high_score else self.game.high_score}", 22, width * 0.99, height * 0.5, font_name, text_colour, align_x="right")
