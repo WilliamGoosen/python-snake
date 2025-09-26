@@ -1,16 +1,29 @@
 import pygame as pg
 from collections import deque
+from food import Pellet
+from settings import SNAKE_BASE_SPEED, SCREEN_WIDTH, SCREEN_HEIGHT, TOP_BAR_HEIGHT, SEGMENT_SIZE
 
 class Snake():
-    def __init__(self, start_x: int, start_y: int, segment_size: int = 20):
-        self.segment_size = segment_size
+    def __init__(self):
+        self.start_x: int = SCREEN_WIDTH // 2
+        self.start_y: int = SCREEN_HEIGHT // 2
+        self.segment_size = SEGMENT_SIZE
         self.body: deque = deque([
-            (start_x, start_y),
-            (start_x - segment_size, start_y),
-            (start_x - segment_size * 2, start_y)])
+            (self.start_x, self.start_y),
+            (self.start_x - self.segment_size, self.start_y),
+            (self.start_x - self.segment_size * 2, self.start_y)])
         self.direction = "right"
         self.should_grow: bool = False
+        self.move_timer: float = 0
+        self.snake_collided: bool = False
+        self.speed: int = SNAKE_BASE_SPEED
 
+    def update(self, dt: float) -> None:
+        self.move_timer += dt
+        if not self.snake_collided and self.move_timer > 1 / self.speed:
+            self.snake_collided = self.move(SCREEN_WIDTH, SCREEN_HEIGHT, TOP_BAR_HEIGHT)
+            self.move_timer = 0
+       
     def head(self) -> tuple:
         return self.body[0]
     
