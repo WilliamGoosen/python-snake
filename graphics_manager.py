@@ -21,8 +21,7 @@ class GraphicsManager:
         self.snake_NE = pg.transform.scale_by(self.get_sprite(self.snake_spritesheet, 120, 0, 40, 40), 0.5)
         self.snake_SW = pg.transform.scale_by(self.get_sprite(self.snake_spritesheet, 80, 40, 40, 40), 0.5)
         self.snake_SE = pg.transform.scale_by(self.get_sprite(self.snake_spritesheet, 120, 40, 40, 40), 0.5)
-        
-
+        self.apple = pg.transform.scale_by(self.get_sprite(self.snake_spritesheet, 120, 80, 40, 40), 0.5)
 
     def get_sprite(self, sheet: pg.Surface, x: int, y: int, width: int, height: int) -> pg.Surface:
         # Create a new surface for the individual sprite

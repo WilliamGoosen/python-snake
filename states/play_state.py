@@ -8,14 +8,14 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from pathlib import Path
     from snake import Snake
-    from food import Pellet
+    from food import Apple
     from game_data import Game
 
 class PlayState(BaseState):
-    def __init__(self, snake: 'Snake', pellet: 'Pellet', grid_coords: list, game: 'Game', font_name: str, hs_file: 'Path'):
+    def __init__(self, snake: 'Snake', apple: 'Apple', grid_coords: list, game: 'Game', font_name: str, hs_file: 'Path'):
         super().__init__()
         self.snake = snake
-        self.pellet = pellet
+        self.apple = apple
         self.game = game
         self.grid_coords = grid_coords
         self.screen_width = SCREEN_WIDTH
@@ -50,16 +50,16 @@ class PlayState(BaseState):
             if new_high_score_check(self.hs_file, self.game.score, self.game.high_score):
                 self.game.high_score = self.game.score
 
-        if self.snake.head() == self.pellet.food_position:
+        if self.snake.head() == self.apple.food_position:
             self.game.score += 1
             self.snake.grow()
-            self.pellet.spawn(self.grid_coords, self.snake.body)
+            self.apple.spawn(self.grid_coords, self.snake.body)
 
 
     def draw(self, surface) -> None:
         self.draw_ui(surface, CHARCOAL, BORDER_GRAY, TEXT_WHITE, self.font_name)
         self.snake.draw(surface)
-        self.pellet.draw(surface)
+        self.apple.draw(surface)
 
 
     def draw_ui(self, surface, bar_colour: tuple, border_colour: tuple, text_colour: tuple, font_name: str) -> None:
