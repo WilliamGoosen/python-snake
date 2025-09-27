@@ -1,13 +1,21 @@
 import pygame as pg
 from random import choice
 from collections import deque
+from settings import SEGMENT_SIZE, WHITE
+from typing import TYPE_CHECKING
+
+# Use the TYPE_CHECKING guard to import for type hints only
+if TYPE_CHECKING:
+    from game_data import Game
 
 class Food():
-    def __init__(self, colour: str = "white", radius: int = 5, segment_size: int = 20):
+    def __init__(self, game: 'Game'):
+        self.game = game
+        self.apple_sprite = game.graphics_manager.food_sprites['apple']
         self.food_position: tuple = (0, 0)
-        self.colour = colour
-        self.radius = radius
-        self.segment_size = segment_size
+        self.colour: tuple = (255, 255, 255)
+        self.radius: int = 5
+        self.segment_size = SEGMENT_SIZE
 
 
     def spawn(self, game_grid: list, snake_body: deque) -> None:
@@ -27,32 +35,31 @@ class Food():
 
             
     def draw(self, screen: pg.Surface) -> None:
-        segment_offset: float = self.segment_size / 2
-        x_pos: float = self.food_position[0] + segment_offset
-        y_pos: float = self.food_position[1] + segment_offset
-        pg.draw.circle(screen, self.colour, (x_pos, y_pos), self.radius)
+        pass
 
 
 class Pellet(Food):
-    def __init__(self, colour: str = "white", radius: int = 5):
-        super().__init__(colour, radius)
+    def __init__(self, game: 'Game',colour: tuple = WHITE, radius: int = 5):
+        super().__init__(game)
+        self.colour = colour
+        self.radius = radius
 
     def spawn(self, game_grid: list, snake_body: deque) -> None:
         return super().spawn(game_grid, snake_body)
     
     def draw(self, screen: pg.Surface) -> None:
-        return super().draw(screen)
+        segment_offset: float = self.segment_size / 2
+        x_pos: float = self.food_position[0] + segment_offset
+        y_pos: float = self.food_position[1] + segment_offset
+        pg.draw.circle(screen, self.colour, (x_pos, y_pos), self.radius)
     
 
 class Apple(Food):
-    def __init__(self, apple_image: pg.Surface):
-        super().__init__()
-        self.apple_image = apple_image
+    def __init__(self, game: 'Game'):
+        super().__init__(game)
         
     def spawn(self, game_grid: list, snake_body: deque) -> None:
         return super().spawn(game_grid, snake_body)
 
     def draw(self, screen: pg.Surface) -> None:        
-        screen.blit(self.apple_image, self.food_position)
-
-
+        screen.blit(self.apple_sprite, self.food_position)

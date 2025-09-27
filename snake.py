@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 class Snake():
     def __init__(self, game: 'Game'):
         self.game = game
+        self.sprites: dict = game.graphics_manager.snake_sprites
         self.start_x: int = SCREEN_WIDTH // 2
         self.start_y: int = SCREEN_HEIGHT // 2
         self.segment_size = SEGMENT_SIZE
@@ -104,23 +105,23 @@ class Snake():
             
             if index == 0:
                 if coord[1] < self.body[1][1]:
-                    screen.blit(self.game.graphics_manager.snake_head_up, (coord[0], coord[1]))
+                    screen.blit(self.sprites["head_N"], (coord[0], coord[1]))
                 elif coord[1] > self.body[1][1]:
-                    screen.blit(self.game.graphics_manager.snake_head_down, (coord[0], coord[1]))
+                    screen.blit(self.sprites["head_S"], (coord[0], coord[1]))
                 elif coord[0] > self.body[1][0]:
-                    screen.blit(self.game.graphics_manager.snake_head_right, (coord[0], coord[1]))
+                    screen.blit(self.sprites["head_E"], (coord[0], coord[1]))
                 elif coord[0] < self.body[1][0]:
-                    screen.blit(self.game.graphics_manager.snake_head_left, (coord[0], coord[1]))
+                    screen.blit(self.sprites["head_W"], (coord[0], coord[1]))
             # Tail orientation
             elif index == last:
                 if coord[1] < self.body[last - 1][1]:
-                    screen.blit(self.game.graphics_manager.snake_tail_up, (coord[0], coord[1]))
+                    screen.blit(self.sprites["tail_N"], (coord[0], coord[1]))
                 elif coord[1] > self.body[last - 1][1]:
-                    screen.blit(self.game.graphics_manager.snake_tail_down, (coord[0], coord[1]))
+                    screen.blit(self.sprites["tail_S"], (coord[0], coord[1]))
                 elif coord[0] > self.body[last - 1][0]:
-                    screen.blit(self.game.graphics_manager.snake_tail_right, (coord[0], coord[1]))
+                    screen.blit(self.sprites["tail_E"], (coord[0], coord[1]))
                 elif coord[0] < self.body[last - 1][0]:
-                    screen.blit(self.game.graphics_manager.snake_tail_left, (coord[0], coord[1]))
+                    screen.blit(self.sprites["tail_W"], (coord[0], coord[1]))
 
             # Body orientation
             elif index > 0 and index < last:
@@ -130,32 +131,32 @@ class Snake():
 
                 # Down and left
                 if leading[0] < current[0] and current[1] > trailing[1]:
-                    screen.blit(self.game.graphics_manager.snake_SE, (coord[0], coord[1]))
+                    screen.blit(self.sprites["body_SE"], (coord[0], coord[1]))
                 # Left and down
                 elif leading[1] > current[1] and current[0] < trailing[0]:
-                    screen.blit(self.game.graphics_manager.snake_NW, (coord[0], coord[1]))
+                    screen.blit(self.sprites["body_NW"], (coord[0], coord[1]))
                 # Left and Up
                 elif leading[1] < current[1] and current[0] < trailing[0]:
-                    screen.blit(self.game.graphics_manager.snake_SW, (coord[0], coord[1]))
+                    screen.blit(self.sprites["body_SW"], (coord[0], coord[1]))
                 # Down and right
                 elif leading[0] > current[0] and current[1] > trailing[1]:
-                    screen.blit(self.game.graphics_manager.snake_SW, (coord[0], coord[1]))               
+                    screen.blit(self.sprites["body_SW"], (coord[0], coord[1]))               
                  # Right and down
                 elif leading[1] > current[1] and current[0] > trailing[0]:
-                    screen.blit(self.game.graphics_manager.snake_NE, (coord[0], coord[1]))
+                    screen.blit(self.sprites["body_NE"], (coord[0], coord[1]))
                 # Up and left
                 elif leading[0] < current[0] and current[1] < trailing[1]:
-                    screen.blit(self.game.graphics_manager.snake_NE, (coord[0], coord[1]))
+                    screen.blit(self.sprites["body_NE"], (coord[0], coord[1]))
                 # Up and right
                 elif leading[0] > current[0] and current[1] < trailing[1]:
-                    screen.blit(self.game.graphics_manager.snake_NW, (coord[0], coord[1]))
+                    screen.blit(self.sprites["body_NW"], (coord[0], coord[1]))
                 # Right and up
                 elif leading[1] < current[1] and current[0] > trailing[0]:
-                    screen.blit(self.game.graphics_manager.snake_SE, (coord[0], coord[1]))
+                    screen.blit(self.sprites["body_SE"], (coord[0], coord[1]))
 
                 # Horizontal pieces
                 elif leading[0] != trailing[0]:
-                    screen.blit(self.game.graphics_manager.snake_horizontal, (coord[0], coord[1]))
+                    screen.blit(self.sprites["body_H"], (coord[0], coord[1]))
                 # Vertical pieces
                 elif leading[1] != trailing[1]:
-                    screen.blit(self.game.graphics_manager.snake_vertical, (coord[0], coord[1]))
+                    screen.blit(self.sprites["body_V"], (coord[0], coord[1]))
