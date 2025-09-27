@@ -4,7 +4,7 @@ from settings import SCREEN_HEIGHT, SCREEN_WIDTH, FONT_NAME, HS_FILE, SEGMENT_SI
 from game_data import Game
 from graphics_manager import GraphicsManager
 from snake import Snake
-from food import Pellet
+from food import Apple
 from states import BaseState, TitleState, PlayState, GameOverState
 from utilities import load_or_create_file
 
@@ -53,10 +53,10 @@ while running:
 
     if current_state.next_state == "PLAY":
         snake: Snake = Snake(game)
-        pellet: Pellet = Pellet()
-        pellet.spawn(GRID_COORDS, snake.body)
+        apple: Apple = Apple(game.graphics_manager.apple)
+        apple.spawn(GRID_COORDS, snake.body)
         game.score = 0
-        current_state = PlayState(snake, pellet, GRID_COORDS, game, font_name, hs_file)
+        current_state = PlayState(snake, apple, GRID_COORDS, game, font_name, hs_file)
     elif current_state.next_state == "GAME_OVER":
             current_state = GameOverState(game)
     elif current_state.next_state == "TITLE":

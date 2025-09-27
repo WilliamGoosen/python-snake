@@ -42,5 +42,17 @@ class Pellet(Food):
     
     def draw(self, screen: pg.Surface) -> None:
         return super().draw(screen)
+    
+
+class Apple(Food):
+    def __init__(self, apple_image: pg.Surface):
+        super().__init__()
+        self.apple_image = apple_image
+        
+    def spawn(self, game_grid: list, snake_body: deque) -> None:
+        return super().spawn(game_grid, snake_body)
+
+    def draw(self, screen: pg.Surface) -> None:        
+        screen.blit(self.apple_image, self.food_position)
 
 
