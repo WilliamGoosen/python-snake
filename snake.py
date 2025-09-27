@@ -99,64 +99,82 @@ class Snake():
         return position in self.body
     
     def draw(self, screen: pg.Surface) -> None:
-        last = len(self.body) - 1
-
         for index, coord in enumerate(self.body):
+            sprite_name = self._get_segment_sprite(index)
+            screen.blit(self.sprites[sprite_name], (coord[0], coord[1]))
             
-            if index == 0:
-                if coord[1] < self.body[1][1]:
-                    screen.blit(self.sprites["head_N"], (coord[0], coord[1]))
-                elif coord[1] > self.body[1][1]:
-                    screen.blit(self.sprites["head_S"], (coord[0], coord[1]))
-                elif coord[0] > self.body[1][0]:
-                    screen.blit(self.sprites["head_E"], (coord[0], coord[1]))
-                elif coord[0] < self.body[1][0]:
-                    screen.blit(self.sprites["head_W"], (coord[0], coord[1]))
-            # Tail orientation
-            elif index == last:
-                if coord[1] < self.body[last - 1][1]:
-                    screen.blit(self.sprites["tail_N"], (coord[0], coord[1]))
-                elif coord[1] > self.body[last - 1][1]:
-                    screen.blit(self.sprites["tail_S"], (coord[0], coord[1]))
-                elif coord[0] > self.body[last - 1][0]:
-                    screen.blit(self.sprites["tail_E"], (coord[0], coord[1]))
-                elif coord[0] < self.body[last - 1][0]:
-                    screen.blit(self.sprites["tail_W"], (coord[0], coord[1]))
 
-            # Body orientation
-            elif index > 0 and index < last:
-                leading = self.body[index - 1]
-                current = self.body[index]
-                trailing = self.body[index + 1]
+    def _get_segment_sprite(self, index: int)-> str:
+        last = len(self.body) - 1
+        leading: tuple
+        current: tuple
+        trailing: tuple
+        # Returns the correct sprite name based on position logic
+        if index == 0:
+            current: tuple = self.body[index]
+            trailing: tuple = self.body[index + 1]
+            return self._get_head_sprite(current, trailing)
+        
+        elif index == last:
+            current: tuple = self.body[index]
+            leading: tuple = self.body[index - 1]
+            return self._get_tail_sprite(current, leading)
+        
+        else:
+            leading: tuple = self.body[index - 1]
+            current: tuple = self.body[index]
+            trailing: tuple = self.body[index + 1]
+            return self._get_body_sprite(leading, current, trailing)
 
-                # Down and left
-                if leading[0] < current[0] and current[1] > trailing[1]:
-                    screen.blit(self.sprites["body_SE"], (coord[0], coord[1]))
-                # Left and down
-                elif leading[1] > current[1] and current[0] < trailing[0]:
-                    screen.blit(self.sprites["body_NW"], (coord[0], coord[1]))
-                # Left and Up
-                elif leading[1] < current[1] and current[0] < trailing[0]:
-                    screen.blit(self.sprites["body_SW"], (coord[0], coord[1]))
-                # Down and right
-                elif leading[0] > current[0] and current[1] > trailing[1]:
-                    screen.blit(self.sprites["body_SW"], (coord[0], coord[1]))               
-                 # Right and down
-                elif leading[1] > current[1] and current[0] > trailing[0]:
-                    screen.blit(self.sprites["body_NE"], (coord[0], coord[1]))
-                # Up and left
-                elif leading[0] < current[0] and current[1] < trailing[1]:
-                    screen.blit(self.sprites["body_NE"], (coord[0], coord[1]))
-                # Up and right
-                elif leading[0] > current[0] and current[1] < trailing[1]:
-                    screen.blit(self.sprites["body_NW"], (coord[0], coord[1]))
-                # Right and up
-                elif leading[1] < current[1] and current[0] > trailing[0]:
-                    screen.blit(self.sprites["body_SE"], (coord[0], coord[1]))
 
-                # Horizontal pieces
-                elif leading[0] != trailing[0]:
-                    screen.blit(self.sprites["body_H"], (coord[0], coord[1]))
-                # Vertical pieces
-                elif leading[1] != trailing[1]:
-                    screen.blit(self.sprites["body_V"], (coord[0], coord[1]))
+    def _get_head_sprite(self, current: tuple, trailing: tuple) -> str:
+        if current[1] < trailing[1]:
+            return "head_N"
+        elif current[1] > trailing[1]:
+            return "head_S"
+        elif current[0] > trailing[0]:
+            return "head_E"
+        else:
+            return "head_W"
+
+    def _get_tail_sprite(self, current: tuple, leading: tuple) -> str:
+        if current[1] < leading[1]:
+            return "tail_N"
+        elif current[1] > leading[1]:
+            return "tail_S"
+        elif current[0] > leading[0]:
+            return "tail_E"
+        else:
+            return "tail_W"
+
+    def _get_body_sprite(self, leading: tuple, current: tuple, trailing: tuple) -> str:
+        # Down and left
+        if leading[0] < current[0] and current[1] > trailing[1]:
+            return "body_SE"
+        # Left and down
+        elif leading[1] > current[1] and current[0] < trailing[0]:
+            return "body_NW"
+        # Left and Up
+        elif leading[1] < current[1] and current[0] < trailing[0]:
+            return "body_SW"
+        # Down and right
+        elif leading[0] > current[0] and current[1] > trailing[1]:
+            return "body_SW"
+         # Right and down
+        elif leading[1] > current[1] and current[0] > trailing[0]:
+            return "body_NE"
+        # Up and left
+        elif leading[0] < current[0] and current[1] < trailing[1]:
+            return "body_NE"
+        # Up and right
+        elif leading[0] > current[0] and current[1] < trailing[1]:
+            return "body_NW"
+        # Right and up
+        elif leading[1] < current[1] and current[0] > trailing[0]:
+            return "body_SE"
+        # Horizontal pieces
+        elif leading[0] != trailing[0]:
+            return "body_H"
+        # Vertical pieces
+        else:
+            return "body_V"
