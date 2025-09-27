@@ -27,3 +27,26 @@ BORDER_GRAY = (74, 85, 104)
 TEXT_WHITE = (226, 232, 240)
 FOREST_GREEN = (34, 139, 34) # Forest Green
 TITLE_SCREEN_BG = (0, 100, 0) # Dark Forest Green
+
+# Snake body parts
+SNAKE_SPRITES = {
+    "head_W": {"x": 0, "y": 0, "width": 40, "height": 40, "scale": 0.5},
+    "head_E": {"x": 40, "y": 40, "width": 40, "height": 40, "scale": 0.5},
+    "head_N": {"x": 40, "y": 0, "width": 40, "height": 40, "scale": 0.5},
+    "head_S": {"x": 0, "y": 40, "width": 40, "height": 40, "scale": 0.5},
+    "tail_W": {"x": 40, "y": 80, "width": 40, "height": 40, "scale": 0.5},
+    "tail_E": {"x": 40, "y": 120, "width": 40, "height": 40, "scale": 0.5},
+    "tail_N": {"x": 0, "y": 80, "width": 40, "height": 40, "scale": 0.5},
+    "tail_S": {"x": 0, "y": 120, "width": 40, "height": 40, "scale": 0.5},
+    "body_H": {"x": 80, "y": 80, "width": 40, "height": 40, "scale": 0.5},
+    "body_V": {"x": 80, "y": 120, "width": 40, "height": 40, "scale": 0.5},
+    "body_NW": {"x": 80, "y": 0, "width": 40, "height": 40, "scale": 0.5},
+    "body_NE": {"x": 120, "y": 0, "width": 40, "height": 40, "scale": 0.5},
+    "body_SW": {"x": 80, "y": 40, "width": 40, "height": 40, "scale": 0.5},
+    "body_SE": {"x": 120, "y": 40, "width": 40, "height": 40, "scale": 0.5}
+}
+
+# Food sprites
+FOOD_SPRITES = {
+    "apple": {"x": 120, "y": 80, "width": 40, "height": 40, "scale": 0.5}
+}

@@ -53,7 +53,7 @@ while running:
 
     if current_state.next_state == "PLAY":
         snake: Snake = Snake(game)
-        apple: Apple = Apple(game.graphics_manager.apple)
+        apple: Apple = Apple(game)
         apple.spawn(GRID_COORDS, snake.body)
         game.score = 0
         current_state = PlayState(snake, apple, GRID_COORDS, game, font_name, hs_file)
