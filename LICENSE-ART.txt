@@ -1,0 +1,17 @@
+ARTWORK LICENSE
+===============
+
+All artwork in the img/ folder is licensed under
+Creative Commons Attribution 4.0 International (CC BY 4.0).
+
+Files:
+- img/snake_sheet.png
+
+Created by: WilliamGoosen
+License: https://creativecommons.org/licenses/by/4.0/
+
+You are free to:
+- Share and redistribute these assets
+- Adapt and modify them
+
+You must provide attribution to WilliamGoosen.
